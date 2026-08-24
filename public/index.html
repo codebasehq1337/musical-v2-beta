@@ -10,6 +10,8 @@
 <body>
   <canvas id="bg-3d-canvas"></canvas>
 
+  <div id="toast-container"></div>
+
   <div id="click-to-enter-overlay" class="overlay">
     <div class="enter-content">
       <h1 class="glow-text">[ click to enter ]</h1>
@@ -19,7 +21,7 @@
 
   <div id="app">
     <nav class="navbar">
-      <div class="logo" onclick="lookupUser('vey')">MUSICAL</div>
+      <div class="logo" onclick="showSection('profile-view')">MUSICAL</div>
       <div class="search-bar">
         <input type="text" id="search-username" placeholder="search user..." onkeydown="handleSearchKey(event)">
         <button onclick="performSearch()">search</button>
@@ -49,39 +51,60 @@
           <div id="view-socials" class="socials-grid"></div>
 
           <div class="card-footer">
-            <span class="view-count">views: <span id="view-count">0</span></span>
             <button id="audio-toggle-btn" class="audio-btn" onclick="toggleAudio()">play music</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Edit Profile -->
+    <!-- Expanded Profile Customization -->
     <section id="profile-builder" class="section hidden">
       <div class="form-container">
-        <h2>edit profile</h2>
+        <h2>customize profile</h2>
+        
         <div class="form-group">
-          <label>avatar url</label>
-          <input type="text" id="edit-avatar" placeholder="https://...">
+          <label>avatar picture</label>
+          <div class="file-upload-row">
+            <input type="file" id="pfp-file-input" accept="image/*" class="hidden" onchange="handlePfpUpload(event)">
+            <button type="button" class="secondary-btn" onclick="document.getElementById('pfp-file-input').click()">choose image from computer</button>
+            <span id="pfp-file-name" class="file-hint">no file selected</span>
+          </div>
+          <input type="text" id="edit-avatar" placeholder="or paste image url" style="margin-top:0.5rem;">
         </div>
+
         <div class="form-group">
           <label>bio</label>
           <textarea id="edit-bio" rows="3" placeholder="say something..."></textarea>
         </div>
+
         <div class="form-group">
-          <label>track url (mp3 link)</label>
+          <label>audio track url (mp3 link)</label>
           <input type="text" id="edit-audio" placeholder="https://...">
         </div>
-        <div class="form-group">
-          <label>theme color</label>
-          <input type="color" id="edit-color" value="#ff0055">
+
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label>accent theme color</label>
+            <input type="color" id="edit-color" value="#ff0055">
+          </div>
+          <div class="form-group">
+            <label>font style</label>
+            <select id="edit-font">
+              <option value="monospace">Monospace (Cyber)</option>
+              <option value="sans-serif">Sans-Serif (Clean)</option>
+              <option value="serif">Serif (Classic)</option>
+            </select>
+          </div>
         </div>
+
         <div class="form-group">
-          <label>socials</label>
-          <input type="text" id="edit-social-discord" placeholder="discord">
-          <input type="text" id="edit-social-telegram" placeholder="telegram">
-          <input type="text" id="edit-social-soundcloud" placeholder="soundcloud">
+          <label>social links</label>
+          <input type="text" id="edit-social-discord" placeholder="discord tag/link">
+          <input type="text" id="edit-social-telegram" placeholder="telegram handle">
+          <input type="text" id="edit-social-soundcloud" placeholder="soundcloud URL">
+          <input type="text" id="edit-social-github" placeholder="github handle">
         </div>
+
         <button class="primary-btn" onclick="saveProfile()">save changes</button>
       </div>
     </section>
@@ -107,27 +130,58 @@
       </div>
     </section>
 
-    <!-- Admin -->
+    <!-- Extended Admin Suite -->
     <section id="admin" class="section hidden">
       <div class="form-container border-admin">
-        <h2>admin badge manager</h2>
-        <div class="form-group">
-          <label>target username</label>
-          <input type="text" id="admin-target" placeholder="username">
-        </div>
-        <div class="form-group">
-          <label>badge</label>
-          <select id="admin-badge">
-            <option value="OG">OG</option>
-            <option value="DEV">DEV</option>
-            <option value="ADMIN">ADMIN</option>
-            <option value="VERIFIED">VERIFIED</option>
-            <option value="VIP">VIP</option>
-          </select>
-        </div>
-        <div class="button-group">
-          <button class="primary-btn" onclick="manageBadge('add')">give badge</button>
-          <button class="secondary-btn" onclick="manageBadge('remove')">remove badge</button>
+        <h2 class="admin-head-title">admin control suite</h2>
+        
+        <div class="admin-grid">
+          <!-- Badge Management -->
+          <div class="admin-card">
+            <h3>badge manager</h3>
+            <div class="form-group">
+              <input type="text" id="admin-target" placeholder="target username">
+            </div>
+            <div class="form-group">
+              <select id="admin-badge">
+                <option value="OG">OG</option>
+                <option value="DEV">DEV</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="VERIFIED">VERIFIED</option>
+                <option value="VIP">VIP</option>
+                <option value="STAFF">STAFF</option>
+                <option value="ARTIST">ARTIST</option>
+                <option value="MOD">MOD</option>
+              </select>
+            </div>
+            <div class="button-group">
+              <button class="primary-btn" onclick="manageBadge('add')">give badge</button>
+              <button class="secondary-btn" onclick="manageBadge('remove')">remove badge</button>
+            </div>
+          </div>
+
+          <!-- Moderation Controls -->
+          <div class="admin-card">
+            <h3>user moderation</h3>
+            <div class="form-group">
+              <input type="text" id="admin-mod-target" placeholder="target username">
+            </div>
+            <div class="button-group-vertical">
+              <button class="danger-btn" onclick="adminModAction('ban')">ban user</button>
+              <button class="secondary-btn" onclick="adminModAction('unban')">unban user</button>
+              <button class="warning-btn" onclick="adminModAction('reset_profile')">reset bio & avatar</button>
+            </div>
+          </div>
+
+          <!-- System Broadcast & Chat Control -->
+          <div class="admin-card">
+            <h3>system commands</h3>
+            <div class="form-group">
+              <input type="text" id="admin-broadcast-msg" placeholder="global announcement text">
+            </div>
+            <button class="primary-btn" onclick="adminBroadcast()">send broadcast</button>
+            <button class="warning-btn" style="margin-top:0.5rem;" onclick="adminClearChat()">purge global chat</button>
+          </div>
         </div>
       </div>
     </section>
