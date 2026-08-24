@@ -32,6 +32,33 @@ body {
   pointer-events: none;
 }
 
+/* Toast Notifications */
+#toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: rgba(18, 20, 29, 0.95);
+  border: 1px solid var(--primary-color);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -155,18 +182,28 @@ body {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   margin: 0.8rem 0 1.2rem;
 }
 
 .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--primary-color);
   color: var(--primary-color);
-  font-size: 0.7rem;
-  padding: 0.2rem 0.5rem;
+  font-size: 0.72rem;
+  padding: 0.25rem 0.6rem;
   border-radius: 4px;
   font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.badge svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
 }
 
 .bio-description {
@@ -199,12 +236,10 @@ body {
 
 .card-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   border-top: 1px solid var(--border-color);
   padding-top: 1rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
 }
 
 .form-container {
@@ -219,8 +254,45 @@ body {
   border-color: #ff3300;
 }
 
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.admin-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  padding: 1.2rem;
+  border-radius: 10px;
+}
+
+.admin-card h3 {
+  font-size: 1rem;
+  color: #ff5533;
+  margin-bottom: 1rem;
+}
+
 .form-group {
   margin-bottom: 1.2rem;
+}
+
+.form-row-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.file-upload-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.file-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
 label {
@@ -244,12 +316,13 @@ input:focus, textarea:focus {
   border-color: var(--primary-color);
 }
 
-.primary-btn, .secondary-btn, .audio-btn {
+.primary-btn, .secondary-btn, .audio-btn, .danger-btn, .warning-btn {
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   border: none;
   font-weight: 700;
   cursor: pointer;
+  transition: filter 0.2s ease;
 }
 
 .primary-btn {
@@ -262,6 +335,16 @@ input:focus, textarea:focus {
   color: #fff;
 }
 
+.danger-btn {
+  background: #ff2244;
+  color: #fff;
+}
+
+.warning-btn {
+  background: #ffaa00;
+  color: #000;
+}
+
 .audio-btn {
   background: transparent;
   border: 1px solid var(--primary-color);
@@ -270,7 +353,13 @@ input:focus, textarea:focus {
 
 .button-group {
   display: flex;
-  gap: 1rem;
+  gap: 0.8rem;
+}
+
+.button-group-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
 }
 
 .forum-header {
