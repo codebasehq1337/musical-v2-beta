@@ -1,433 +1,238 @@
-:root {
-  --primary-color: #ff0055;
-  --bg-color: #08090c;
-  --panel-bg: rgba(16, 18, 27, 0.85);
-  --border-color: rgba(255, 255, 255, 0.1);
-  --text-main: #ffffff;
-  --text-muted: #8e92a2;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>musical</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <canvas id="bg-3d-canvas"></canvas>
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: inherit;
-  user-select: none;
-}
+  <div id="toast-container"></div>
 
-body {
-  background-color: var(--bg-color);
-  color: var(--text-main);
-  overflow-x: hidden;
-  min-height: 100vh;
-}
+  <div id="click-to-enter-overlay" class="overlay">
+    <div class="enter-content">
+      <h1 class="glow-text">[ click to enter ]</h1>
+      <p>musical platform</p>
+    </div>
+  </div>
 
-#bg-3d-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 0;
-  pointer-events: none;
-}
+  <div id="app">
+    <nav class="navbar">
+      <div class="logo" onclick="showSection('profile-view')">MUSICAL</div>
+      <div class="search-bar">
+        <input type="text" id="search-username" placeholder="search user..." onkeydown="handleSearchKey(event)">
+        <button onclick="performSearch()">search</button>
+      </div>
+      <div class="nav-links">
+        <button onclick="showSection('profile-view')">profile</button>
+        <button id="editor-nav-btn" onclick="showSection('profile-builder')" class="hidden">edit profile</button>
+        <button onclick="showSection('forum'); loadForumPosts();">forum</button>
+        <button onclick="showSection('global-chat')">chat</button>
+        <button id="admin-nav-btn" class="hidden admin-tag" onclick="showSection('admin')">admin panel</button>
+        <button id="auth-modal-btn" onclick="openAuthModal()">login / register</button>
+      </div>
+    </nav>
 
-/* Toast Notifications */
-#toast-container {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+    <!-- Profile View -->
+    <section id="profile-view" class="section">
+      <div class="bio-card-wrapper">
+        <div class="bio-card" id="bio-card">
+          <div class="avatar-container">
+            <img id="view-avatar" src="https://i.imgur.com/6VBx3io.png" alt="Avatar" class="avatar">
+          </div>
+          <h1 id="view-username" class="user-title">vey</h1>
+          <div id="view-badges" class="badges"></div>
+          <p id="view-bio" class="bio-description">loading...</p>
+          
+          <div id="view-tracks" class="tracks-list"></div>
+          <div id="view-socials" class="socials-grid"></div>
 
-.toast {
-  background: rgba(18, 20, 29, 0.95);
-  border: 1px solid var(--primary-color);
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  animation: slideIn 0.3s ease;
-}
+          <div class="card-footer">
+            <button id="audio-toggle-btn" class="audio-btn" onclick="toggleAudio()">play music</button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-@keyframes slideIn {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
+    <!-- Expanded Profile Customization -->
+    <section id="profile-builder" class="section hidden">
+      <div class="form-container">
+        <h2>customize profile</h2>
+        
+        <div class="form-group">
+          <label>avatar picture</label>
+          <div class="file-upload-row">
+            <input type="file" id="pfp-file-input" accept="image/*" class="hidden" onchange="handlePfpUpload(event)">
+            <button type="button" class="secondary-btn" onclick="document.getElementById('pfp-file-input').click()">choose image from computer</button>
+            <span id="pfp-file-name" class="file-hint">no file selected</span>
+          </div>
+          <input type="text" id="edit-avatar" placeholder="or paste image url" style="margin-top:0.5rem;">
+        </div>
 
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: #000;
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: opacity 0.8s ease;
-}
+        <div class="form-group">
+          <label>bio</label>
+          <textarea id="edit-bio" rows="3" placeholder="say something..."></textarea>
+        </div>
 
-.glow-text {
-  font-size: 2rem;
-  color: var(--primary-color);
-  text-shadow: 0 0 20px var(--primary-color);
-}
+        <div class="form-group">
+          <label>audio track url (mp3 link)</label>
+          <input type="text" id="edit-audio" placeholder="https://...">
+        </div>
 
-#app {
-  position: relative;
-  z-index: 10;
-}
+        <div class="form-row-2col">
+          <div class="form-group">
+            <label>accent theme color</label>
+            <input type="color" id="edit-color" value="#ff0055">
+          </div>
+          <div class="form-group">
+            <label>font style</label>
+            <select id="edit-font">
+              <option value="monospace">Monospace (Cyber)</option>
+              <option value="sans-serif">Sans-Serif (Clean)</option>
+              <option value="serif">Serif (Classic)</option>
+            </select>
+          </div>
+        </div>
 
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1rem 2rem;
-  background: rgba(10, 11, 16, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
+        <div class="form-group">
+          <label>social links</label>
+          <input type="text" id="edit-social-discord" placeholder="discord tag/link">
+          <input type="text" id="edit-social-telegram" placeholder="telegram handle">
+          <input type="text" id="edit-social-soundcloud" placeholder="soundcloud URL">
+          <input type="text" id="edit-social-github" placeholder="github handle">
+        </div>
 
-.logo {
-  font-weight: 900;
-  font-size: 1.4rem;
-  letter-spacing: 2px;
-  color: var(--primary-color);
-  cursor: pointer;
-}
+        <button class="primary-btn" onclick="saveProfile()">save changes</button>
+      </div>
+    </section>
 
-.search-bar {
-  display: flex;
-  gap: 0.5rem;
-  width: 30%;
-}
+    <!-- Forum -->
+    <section id="forum" class="section hidden">
+      <div class="forum-header">
+        <h2>forum</h2>
+        <button class="primary-btn" onclick="toggleThreadModal(true)">+ post thread</button>
+      </div>
+      <div id="forum-posts" class="forum-container"></div>
+    </section>
 
-.nav-links {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
+    <!-- Global Chat -->
+    <section id="global-chat" class="section hidden">
+      <div class="chat-container">
+        <h2>chat</h2>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="type a message..." onkeydown="handleChatKey(event)">
+          <button class="primary-btn" onclick="sendChatMessage()">send</button>
+        </div>
+      </div>
+    </section>
 
-.nav-links button {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-weight: 600;
-  cursor: pointer;
-}
+    <!-- Extended Admin Suite -->
+    <section id="admin" class="section hidden">
+      <div class="form-container border-admin">
+        <h2 class="admin-head-title">admin control suite</h2>
+        
+        <div class="admin-grid">
+          <!-- Badge Management -->
+          <div class="admin-card">
+            <h3>badge manager</h3>
+            <div class="form-group">
+              <input type="text" id="admin-target" placeholder="target username">
+            </div>
+            <div class="form-group">
+              <select id="admin-badge">
+                <option value="OG">OG</option>
+                <option value="DEV">DEV</option>
+                <option value="ADMIN">ADMIN</option>
+                <option value="VERIFIED">VERIFIED</option>
+                <option value="VIP">VIP</option>
+                <option value="STAFF">STAFF</option>
+                <option value="ARTIST">ARTIST</option>
+                <option value="MOD">MOD</option>
+              </select>
+            </div>
+            <div class="button-group">
+              <button class="primary-btn" onclick="manageBadge('add')">give badge</button>
+              <button class="secondary-btn" onclick="manageBadge('remove')">remove badge</button>
+            </div>
+          </div>
 
-.nav-links button:hover {
-  color: #fff;
-}
+          <!-- Moderation Controls -->
+          <div class="admin-card">
+            <h3>user moderation</h3>
+            <div class="form-group">
+              <input type="text" id="admin-mod-target" placeholder="target username">
+            </div>
+            <div class="button-group-vertical">
+              <button class="danger-btn" onclick="adminModAction('ban')">ban user</button>
+              <button class="secondary-btn" onclick="adminModAction('unban')">unban user</button>
+              <button class="warning-btn" onclick="adminModAction('reset_profile')">reset bio & avatar</button>
+            </div>
+          </div>
 
-.admin-tag {
-  color: #ff3300 !important;
-  border: 1px solid #ff3300 !important;
-  padding: 0.3rem 0.6rem !important;
-  border-radius: 4px;
-}
+          <!-- System Broadcast & Chat Control -->
+          <div class="admin-card">
+            <h3>system commands</h3>
+            <div class="form-group">
+              <input type="text" id="admin-broadcast-msg" placeholder="global announcement text">
+            </div>
+            <button class="primary-btn" onclick="adminBroadcast()">send broadcast</button>
+            <button class="warning-btn" style="margin-top:0.5rem;" onclick="adminClearChat()">purge global chat</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 
-.section {
-  padding: 3rem 1.5rem;
-  max-width: 1000px;
-  margin: 0 auto;
-}
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+      <h2>account</h2>
+      <div class="form-group">
+        <label>username</label>
+        <input type="text" id="auth-username" placeholder="username">
+      </div>
+      <div class="form-group">
+        <label>password</label>
+        <input type="password" id="auth-password" placeholder="password">
+      </div>
+      <div class="button-group">
+        <button class="primary-btn" onclick="handleAuth('login')">login</button>
+        <button class="secondary-btn" onclick="handleAuth('register')">register</button>
+      </div>
+    </div>
+  </div>
 
-.hidden {
-  display: none !important;
-}
+  <!-- Thread Modal -->
+  <div id="thread-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="toggleThreadModal(false)">&times;</span>
+      <h2>new thread</h2>
+      <div class="form-group">
+        <label>title</label>
+        <input type="text" id="thread-title" placeholder="title">
+      </div>
+      <div class="form-group">
+        <label>category</label>
+        <select id="thread-category">
+          <option value="General">General</option>
+          <option value="Music">Music</option>
+          <option value="Marketplace">Marketplace</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>content</label>
+        <textarea id="thread-content" rows="4" placeholder="post content..."></textarea>
+      </div>
+      <button class="primary-btn" onclick="submitThread()">post</button>
+    </div>
+  </div>
 
-.bio-card-wrapper {
-  perspective: 1000px;
-  display: flex;
-  justify-content: center;
-}
-
-.bio-card {
-  width: 100%;
-  max-width: 480px;
-  background: var(--panel-bg);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 2.5rem;
-  text-align: center;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-  transition: transform 0.1s ease;
-}
-
-.avatar {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  border: 3px solid var(--primary-color);
-  object-fit: cover;
-  box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
-}
-
-.user-title {
-  font-size: 1.8rem;
-  margin-top: 0.8rem;
-  font-weight: 800;
-}
-
-.badges {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  margin: 0.8rem 0 1.2rem;
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
-  font-size: 0.72rem;
-  padding: 0.25rem 0.6rem;
-  border-radius: 4px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-.badge svg {
-  width: 12px;
-  height: 12px;
-  fill: currentColor;
-}
-
-.bio-description {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 1.5rem;
-}
-
-.tracks-list {
-  margin-bottom: 1rem;
-}
-
-.socials-grid {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.social-link {
-  color: #fff;
-  text-decoration: none;
-  background: rgba(255,255,255,0.05);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  border: 1px solid var(--border-color);
-}
-
-.card-footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-top: 1px solid var(--border-color);
-  padding-top: 1rem;
-}
-
-.form-container {
-  background: var(--panel-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 2rem;
-}
-
-.border-admin {
-  border-color: #ff3300;
-}
-
-.admin-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
-}
-
-.admin-card {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--border-color);
-  padding: 1.2rem;
-  border-radius: 10px;
-}
-
-.admin-card h3 {
-  font-size: 1rem;
-  color: #ff5533;
-  margin-bottom: 1rem;
-}
-
-.form-group {
-  margin-bottom: 1.2rem;
-}
-
-.form-row-2col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.file-upload-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.file-hint {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-label {
-  display: block;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-bottom: 0.4rem;
-}
-
-input, textarea, select {
-  width: 100%;
-  padding: 0.75rem 1rem;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  color: #fff;
-  outline: none;
-}
-
-input:focus, textarea:focus {
-  border-color: var(--primary-color);
-}
-
-.primary-btn, .secondary-btn, .audio-btn, .danger-btn, .warning-btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  border: none;
-  font-weight: 700;
-  cursor: pointer;
-  transition: filter 0.2s ease;
-}
-
-.primary-btn {
-  background: var(--primary-color);
-  color: #fff;
-}
-
-.secondary-btn {
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-}
-
-.danger-btn {
-  background: #ff2244;
-  color: #fff;
-}
-
-.warning-btn {
-  background: #ffaa00;
-  color: #000;
-}
-
-.audio-btn {
-  background: transparent;
-  border: 1px solid var(--primary-color);
-  color: var(--primary-color);
-}
-
-.button-group {
-  display: flex;
-  gap: 0.8rem;
-}
-
-.button-group-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-
-.forum-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-}
-
-.forum-card {
-  background: var(--panel-bg);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 1.2rem;
-  margin-bottom: 1rem;
-}
-
-.forum-meta {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
-}
-
-.chat-box {
-  height: 400px;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1rem;
-  overflow-y: auto;
-  margin-bottom: 1rem;
-}
-
-.chat-msg {
-  margin-bottom: 0.6rem;
-  font-size: 0.9rem;
-}
-
-.chat-input-row {
-  display: flex;
-  gap: 0.8rem;
-}
-
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: #12141d;
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  padding: 2rem;
-  width: 90%;
-  max-width: 450px;
-  position: relative;
-}
-
-.close-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1.5rem;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: var(--text-muted);
-}
+  <audio id="global-audio" loop></audio>
+  <script src="app.js"></script>
+</body>
+</html>
