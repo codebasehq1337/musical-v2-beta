@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>admin — musical</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    :root { --bg: #0a0e1a; --bg-raised: #0f1424; --border: #1a2342; --text: #c8d4e8; --text-bright: #e8eef8; --text-muted: #5a6a8a; --accent: #4a7fc9; --accent-hover: #5a90e0; --radius: 4px; --font: 'Inter',-apple-system,sans-serif; --font-mono: 'JetBrains Mono',monospace; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
+    .nav-logo { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--text-bright); text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 24px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-user { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-raised); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; color: var(--accent); overflow: hidden; }
+    .nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .container { max-width: 900px; margin: 0 auto; padding: 48px 32px 80px; }
+    h1 { font-size: 32px; font-weight: 700; color: var(--text-bright); margin-bottom: 8px; }
+    h2 { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text-muted); text-transform: lowercase; margin-bottom: 20px; letter-spacing: 0.02em; }
+    h3 { font-size: 15px; font-weight: 600; color: var(--text-bright); margin-bottom: 2px; }
+    p { margin-bottom: 12px; max-width: 640px; }
+    .muted { color: var(--text-muted); }
+    .page-header { padding: 32px 0 24px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; border: 1px solid transparent; text-decoration: none; font-family: var(--font); background: transparent; }
+    .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); text-decoration: none; }
+    .btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+    .btn-danger { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.2); }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); }
+    .btn-sm { padding: 6px 14px; font-size: 13px; }
+    .admin-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+    .admin-stat { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; }
+    .admin-stat-num { font-family: var(--font-mono); font-size: 32px; font-weight: 500; color: var(--accent); }
+    .admin-stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+    .admin-user-row { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; transition: all .15s; }
+    .admin-user-row:hover { border-color: var(--accent); }
+    .admin-user-info { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .admin-user-info strong { color: var(--text-bright); }
+    .admin-user-meta { display: flex; align-items: center; gap: 16px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+    .status-dot.online { background: #22c55e; }
+    .status-dot.idle { background: #f59e0b; }
+    .status-dot.dnd { background: #ef4444; }
+    .status-dot.offline { background: #6b7280; }
+    .badge-inline { font-size: 10px; padding: 1px 5px; border-radius: 3px; font-weight: 600; margin-left: 4px; vertical-align: middle; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(10px); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 16px; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); width: 100%; max-width: 480px; padding: 32px; position: relative; max-height: 80vh; overflow-y: auto; }
+    .modal h3 { font-size: 18px; margin-bottom: 20px; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    .form-group input, .form-group select { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--font); font-size: 14px; outline: none; }
+    .form-group input:focus, .form-group select:focus { border-color: var(--accent); }
+    .badge-editor { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .badge-checkbox { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; }
+    .badge-checkbox input { width: auto; }
+    .badge-checkbox span { padding: 4px 10px; border-radius: var(--radius); border: 1px solid; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+    .footer { max-width: 900px; margin: 0 auto; padding: 32px; border-top: 1px solid var(--border); text-align: center; }
+    .footer p { font-size: 13px; color: var(--text-muted); margin: 0 auto; }
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 18px; font-size: 13px; animation: slideIn .2s ease; }
+    @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @media (max-width: 768px) { .nav { padding: 16px 20px; } .container { padding: 32px 20px 60px; } .admin-stats { grid-template-columns: repeat(2, 1fr); } .admin-user-row { flex-direction: column; align-items: flex-start; gap: 8px; } .admin-user-meta { width: 100%; justify-content: space-between; } }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="navbar"></nav>
+  <main class="container">
+    <div class="page-header">
+      <h1>admin panel</h1>
+      <p class="muted">manage users, badges, and site settings. admin only.</p>
+    </div>
+    <div class="admin-stats" id="admin-stats"></div>
+    <section>
+      <h2>## all users</h2>
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+        <input type="text" placeholder="search users..." onkeyup="APP.adminSearchUsers(this.value)" style="flex:1;min-width:200px;padding:10px 12px;background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font);font-size:14px;outline:none;">
+      </div>
+      <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;align-items:center;">
+        <select id="admin-mass-badge" style="padding:8px 12px;background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font);">
+          <option value="admin">admin</option>
+          <option value="verified">verified</option>
+          <option value="premium">premium</option>
+          <option value="beta">beta</option>
+          <option value="og">og</option>
+          <option value="artist">artist</option>
+          <option value="dev">dev</option>
+          <option value="mod">mod</option>
+          <option value="supporter">supporter</option>
+          <option value="of">of</option>
+        </select>
+        <select id="admin-mass-action" style="padding:8px 12px;background:var(--bg-raised);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font);">
+          <option value="add">add to all</option>
+          <option value="remove">remove from all</option>
+        </select>
+        <button class="btn btn-primary btn-sm" onclick="APP.adminMassBadge()">apply</button>
+      </div>
+      <div id="admin-users"></div>
+    </section>
+    <section style="margin-top:48px;">
+      <div id="admin-chat"></div>
+    </section>
+    <section style="margin-top:48px;">
+      <div id="admin-forums"></div>
+    </section>
+    <section style="margin-top:48px;">
+      <div id="admin-announcements"></div>
+    </section>
+    <section style="margin-top:48px;">
+      <div id="admin-activity"></div>
+    </section>
+  </main>
+  <div class="modal-overlay" id="admin-modal">
+    <div class="modal">
+      <button class="modal-close" onclick="document.getElementById('admin-modal').classList.remove('active')"><i class="fas fa-times"></i></button>
+      <div id="admin-modal-content"></div>
+    </div>
+  </div>
+  <footer class="footer"><p>musical — 2026</p></footer>
+  <script src="app.js"></script>
+  <script>APP.requireAuth(); APP.renderNav(); APP.renderAdminEnhanced(); APP.renderAnnouncement();</script>
+</body>
+</html>

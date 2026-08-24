@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>discover — musical</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    :root { --bg: #0a0e1a; --bg-raised: #0f1424; --border: #1a2342; --text: #c8d4e8; --text-bright: #e8eef8; --text-muted: #5a6a8a; --accent: #4a7fc9; --accent-hover: #5a90e0; --radius: 4px; --font: 'Inter',-apple-system,sans-serif; --font-mono: 'JetBrains Mono',monospace; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
+    .nav-logo { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--text-bright); text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 24px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-user { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-raised); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; color: var(--accent); overflow: hidden; }
+    .nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .container { max-width: 900px; margin: 0 auto; padding: 48px 32px 80px; }
+    h1 { font-size: 32px; font-weight: 700; color: var(--text-bright); margin-bottom: 8px; }
+    .muted { color: var(--text-muted); }
+    .page-header { padding: 32px 0 24px; }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+    .filter { padding: 6px 14px; border-radius: var(--radius); border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-size: 13px; font-family: var(--font); cursor: pointer; transition: all .15s; }
+    .filter:hover, .filter.active { border-color: var(--accent); color: var(--accent); }
+    .user-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); border-radius: var(--radius); overflow: hidden; }
+    .user-row { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--bg); transition: background .15s; }
+    .user-row:hover { background: var(--bg-raised); }
+    .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--bg-raised); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--accent); flex-shrink: 0; text-decoration: none; overflow: hidden; }
+    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .user-info { flex: 1; min-width: 0; }
+    .user-info h3 { font-size: 15px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-info a { color: var(--text-bright); text-decoration: none; }
+    .user-info a:hover { color: var(--accent); }
+    .user-info p { font-size: 13px; color: var(--text-muted); margin: 0; }
+    .user-meta { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .compatibility { font-family: var(--font-mono); font-size: 13px; color: var(--accent); }
+    .now-playing { font-size: 13px; color: var(--text-muted); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; border: 1px solid transparent; text-decoration: none; font-family: var(--font); background: transparent; }
+    .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); text-decoration: none; }
+    .btn-ghost { color: var(--text-muted); border-color: transparent; }
+    .btn-ghost:hover { color: var(--text); }
+    .btn-sm { padding: 6px 14px; font-size: 13px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .badge-inline { font-size: 10px; padding: 1px 5px; border-radius: 3px; font-weight: 600; margin-left: 4px; vertical-align: middle; }
+    .footer { max-width: 900px; margin: 0 auto; padding: 32px; border-top: 1px solid var(--border); text-align: center; }
+    .footer p { font-size: 13px; color: var(--text-muted); margin: 0 auto; }
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 18px; font-size: 13px; animation: slideIn .2s ease; }
+    @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @media (max-width: 768px) { .nav { padding: 16px 20px; } .container { padding: 32px 20px 60px; } .user-row { flex-wrap: wrap; } .user-meta { width: 100%; margin-top: 8px; justify-content: space-between; } .now-playing { max-width: none; } }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="navbar"></nav>
+  <main class="container">
+    <div class="page-header"><h1>discover</h1><p class="muted">find your taste twins. filter by genre or just scroll.</p></div>
+    <div class="filters">
+      <button class="filter active" data-filter="all">all</button>
+      <button class="filter" data-filter="shoegaze">shoegaze</button>
+      <button class="filter" data-filter="dream pop">dream pop</button>
+      <button class="filter" data-filter="techno">techno</button>
+      <button class="filter" data-filter="indie rock">indie rock</button>
+      <button class="filter" data-filter="hip hop">hip hop</button>
+      <button class="filter" data-filter="metal">metal</button>
+      <button class="filter" data-filter="synthwave">synthwave</button>
+    </div>
+    <div class="user-list" id="discover-list"></div>
+  </main>
+  <footer class="footer"><p>musical — 2026</p></footer>
+  <script src="app.js">APP.renderAnnouncement();
+  </script>
+  <script>APP.requireAuth(); APP.renderNav(); APP.initDiscover();APP.renderAnnouncement();
+  </script>
+</body>
+</html>

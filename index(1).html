@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>musical</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Bebas+Neue&family=Creepster&family=Poppins:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Syne:wght@400;500;600;700&family=Space+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --bg: #0a0e1a; --bg-raised: #0f1424; --border: #1a2342; --text: #c8d4e8; --text-bright: #e8eef8; --text-muted: #5a6a8a; --accent: #4a7fc9; --accent-hover: #5a90e0; --radius: 4px; --font: 'Inter',-apple-system,sans-serif; --font-mono: 'JetBrains Mono',monospace; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
+    .nav-logo { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--text-bright); text-decoration: none; letter-spacing: -0.02em; }
+    .nav-logo:hover { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 24px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-user { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-raised); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; color: var(--accent); overflow: hidden; }
+    .nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .container { max-width: 900px; margin: 0 auto; padding: 48px 32px 80px; }
+    h1 { font-size: 42px; font-weight: 700; color: var(--text-bright); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 16px; }
+    h2 { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text-muted); text-transform: lowercase; margin-bottom: 20px; letter-spacing: 0.02em; }
+    h3 { font-size: 16px; font-weight: 600; color: var(--text-bright); margin-bottom: 4px; }
+    p { margin-bottom: 12px; max-width: 640px; }
+    .muted { color: var(--text-muted); }
+    .lead { font-size: 17px; line-height: 1.6; color: var(--text); max-width: 560px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { font-family: var(--font-mono); font-size: 13px; background: var(--bg-raised); padding: 2px 6px; border-radius: var(--radius); color: var(--accent); }
+    .hero { padding: 60px 0 80px; }
+    .hero .muted { font-family: var(--font-mono); font-size: 13px; margin-bottom: 16px; }
+    .hero-actions { display: flex; gap: 12px; margin-top: 32px; flex-wrap: wrap; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; border: 1px solid transparent; text-decoration: none; font-family: var(--font); background: transparent; }
+    .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); text-decoration: none; }
+    .btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+    .btn-ghost { color: var(--text-muted); border-color: transparent; }
+    .btn-ghost:hover { color: var(--text); text-decoration: none; }
+    .btn-sm { padding: 6px 14px; font-size: 13px; }
+    .section { padding: 48px 0; border-top: 1px solid var(--border); }
+    .cta { padding-bottom: 0; }
+    .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 32px; }
+    .step-num { font-family: var(--font-mono); font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 8px; }
+    .step p { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+    .feature-list { list-style: none; }
+    .feature-list li { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list code { display: inline-block; min-width: 90px; }
+    .stats-bar { display: flex; gap: 48px; margin-top: 32px; flex-wrap: wrap; }
+    .stat-item { text-align: center; }
+    .stat-item .num { font-family: var(--font-mono); font-size: 28px; font-weight: 500; color: var(--accent); }
+    .stat-item .label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .top-profiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 24px; }
+    .top-profile-card { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; cursor: pointer; transition: all .15s; text-decoration: none; color: var(--text); }
+    .top-profile-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .top-profile-card .avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--bg); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 18px; color: var(--accent); margin-bottom: 12px; overflow: hidden; }
+    .top-profile-card .avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .top-profile-card .name { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+    .top-profile-card .handle { font-size: 12px; color: var(--text-muted); }
+    .top-profile-card .views { font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+    .badge-inline { font-size: 10px; padding: 1px 5px; border-radius: 3px; font-weight: 600; margin-left: 4px; vertical-align: middle; }
+    .footer { max-width: 900px; margin: 0 auto; padding: 32px; border-top: 1px solid var(--border); text-align: center; }
+    .footer p { font-size: 13px; color: var(--text-muted); margin: 0 auto; }
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 18px; font-size: 13px; box-shadow: 0 4px 20px rgba(0,0,0,0.4); animation: slideIn .2s ease; }
+    @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @media (max-width: 768px) { .nav { padding: 16px 20px; } .container { padding: 32px 20px 60px; } h1 { font-size: 32px; } .steps { grid-template-columns: 1fr; } .hero-actions { flex-direction: column; } .top-profiles { grid-template-columns: 1fr; } .stats-bar { gap: 24px; } }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="navbar"></nav>
+  <main class="container">
+    <section class="hero">
+      <p class="muted">a site for people who care too much about music</p>
+      <h1>find people who<br>listen to the same<br>weird shit you do</h1>
+      <p class="lead">link your last.fm. see who else has that one 47-second noise track on repeat. no algorithms. no "discover weekly." just scrobbles and people who get it.</p>
+      <div class="hero-actions" id="hero-actions"><a href="login.html" class="btn btn-primary">get started</a></div>
+    </section>
+    <section class="section">
+      <h2>## how it works</h2>
+      <div class="steps">
+        <div class="step"><span class="step-num">01</span><h3>make an account</h3><p>name + password. no email. no verification. 10 seconds.</p></div>
+        <div class="step"><span class="step-num">02</span><h3>link your accounts</h3><p>spotify, last.fm, discord, twitter, github, whatever. we just read your history.</p></div>
+        <div class="step"><span class="step-num">03</span><h3>find your people</h3><p>see who shares your taste. add them. see what they're playing. customize your shit.</p></div>
+      </div>
+    </section>
+    <section class="section">
+      <h2>## what you get</h2>
+      <ul class="feature-list">
+        <li><code>profile</code> — your top artists, recent tracks, playlists. customize colors, fonts, banners, badges, particles, custom css.</li>
+        <li><code>discover</code> — find people by genre or scroll and see who's online. view counts. leaderboards.</li>
+        <li><code>chat</code> — global chat room. talk to everyone online right now.</li>
+        <li><code>forums</code> — discuss music, report bugs, share finds. threaded discussions.</li>
+        <li><code>friends</code> — see what your people are playing. no likes, no feeds, just music.</li>
+        <li><code>stats</code> — hours, genre breakdown, obscure taste score, profile views, hearts.</li>
+        <li><code>links</code> — connect every platform. 30+ social links. one page.</li>
+        <li><code>guestbook</code> — let people leave comments on your profile.</li>
+        <li><code>export</code> — your data is yours. back it up. move it. no lock-in.</li>
+      </ul>
+    </section>
+    <section class="section">
+      <h2>## top profiles</h2>
+      <p class="muted">most viewed this week</p>
+      <div class="top-profiles" id="top-profiles"></div>
+    </section>
+    <section class="section">
+      <h2>## current status</h2>
+      <div class="stats-bar" id="site-stats">
+        <div class="stat-item"><div class="num" id="stat-users">0</div><div class="label">users</div></div>
+        <div class="stat-item"><div class="num" id="stat-views">0</div><div class="label">total views</div></div>
+        <div class="stat-item"><div class="num" id="stat-online">0</div><div class="label">online now</div></div>
+        <div class="stat-item"><div class="num" id="stat-hearts">0</div><div class="label">total hearts</div></div>
+      </div>
+    </section>
+    <section class="section cta"><h2>## ready?</h2><p>it takes 10 seconds. no email required.</p><a href="login.html" class="btn btn-primary" id="cta-btn">make an account</a></section>
+  </main>
+  <footer class="footer"><p>musical — 2026 — <a href="https://github.com/codebasehq1337/musical">source on github</a></p></footer>
+  <script src="app.js">APP.renderAnnouncement();
+  </script>
+  <script>
+    APP.renderNav();
+    const session = APP.getSession();
+    if (session) {
+      document.getElementById('hero-actions').innerHTML = '<a href="discover.html" class="btn btn-primary">find people</a><a href="chat.html" class="btn btn-secondary">global chat</a><a href="profile.html" class="btn btn-secondary">your profile</a>';
+      document.getElementById('cta-btn').href = 'discover.html';
+      document.getElementById('cta-btn').textContent = 'start discovering';
+    }
+    const accounts = APP.getAccounts().sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 6);
+    document.getElementById('top-profiles').innerHTML = accounts.map(u => `
+      <a href="profile.html?id=${u.id}" class="top-profile-card">
+        <div class="avatar" style="${u.avatar ? `background-image:url('${u.avatar}');background-size:cover;background-position:center;color:transparent;` : ''}">${u.avatar ? '' : u.name.charAt(0).toUpperCase()}</div>
+        <div class="name">${u.name}${APP.renderBadgesInline(u.badges)}</div>
+        <div class="handle">@${u.username}</div>
+        <div class="views">${u.views || 0} views · ${u.hearts || 0} hearts</div>
+      </a>
+    `).join('');
+    document.getElementById('stat-users').textContent = APP.getAccounts().length;
+    document.getElementById('stat-views').textContent = APP.getAccounts().reduce((s, u) => s + (u.views || 0), 0).toLocaleString();
+    document.getElementById('stat-online').textContent = APP.getAccounts().filter(u => u.status === 'online').length;
+    document.getElementById('stat-hearts').textContent = APP.getAccounts().reduce((s, u) => s + (u.hearts || 0), 0).toLocaleString();
+  APP.renderAnnouncement();
+  </script>
+</body>
+</html>

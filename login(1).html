@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>login — musical</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    :root { --bg: #0a0e1a; --bg-raised: #0f1424; --border: #1a2342; --text: #c8d4e8; --text-bright: #e8eef8; --text-muted: #5a6a8a; --accent: #4a7fc9; --accent-hover: #5a90e0; --radius: 4px; --font: 'Inter',-apple-system,sans-serif; --font-mono: 'JetBrains Mono',monospace; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
+    .nav-logo { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--text-bright); text-decoration: none; }
+    .nav-links { display: flex; gap: 24px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .15s; }
+    .nav-links a:hover { color: var(--text); }
+    .container { max-width: 420px; margin: 0 auto; padding: 80px 32px; }
+    h1 { font-size: 28px; font-weight: 700; color: var(--text-bright); margin-bottom: 8px; }
+    .muted { color: var(--text-muted); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; border: 1px solid transparent; text-decoration: none; font-family: var(--font); background: transparent; }
+    .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); text-decoration: none; }
+    .btn-ghost { color: var(--text-muted); border-color: transparent; }
+    .btn-ghost:hover { color: var(--text); }
+    .btn-sm { padding: 6px 14px; font-size: 13px; }
+    .auth-box { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; }
+    .auth-toggle { margin-top: 20px; text-align: center; font-size: 14px; color: var(--text-muted); }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    input { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--font); font-size: 14px; outline: none; }
+    input:focus { border-color: var(--accent); }
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 18px; font-size: 13px; animation: slideIn .2s ease; }
+    @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @media (max-width: 768px) { .auth-box { padding: 24px; } .nav { padding: 16px 20px; } }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">musical</a>
+    <div class="nav-links"><a href="index.html">home</a></div>
+  </nav>
+  <main class="container">
+    <div class="auth-box">
+      <h1 id="auth-title">log in</h1>
+      <p class="muted" id="auth-sub">no email. just a name and password.</p>
+      <form id="auth-form" onsubmit="return false;">
+        <div class="form-group"><label>username</label><input type="text" id="auth-user" placeholder="yourname" autocomplete="off"></div>
+        <div class="form-group"><label>password</label><input type="password" id="auth-pass" placeholder="••••••••"></div>
+        <div class="form-group" id="confirm-group" style="display: none;"><label>confirm password</label><input type="password" id="auth-confirm" placeholder="••••••••"></div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;" id="auth-btn">log in</button>
+      </form>
+      <p class="auth-toggle"><span id="auth-toggle-text">no account?</span> <button class="btn btn-ghost btn-sm" id="auth-toggle" onclick="APP.toggleAuth()">sign up</button></p>
+      <p class="muted" style="font-size: 12px; margin-top: 24px; text-align: center;">everything is stored locally in your browser. no server. no tracking.</p>
+      <p class="muted" style="font-size: 11px; margin-top: 8px; text-align: center;">try: <code>alex</code> / <code>alex</code> or <code>vey</code> / <code>vey</code></p>
+    </div>
+  </main>
+  <script src="app.js"></script>
+  <script>APP.initAuthPage();</script>
+<script src="app.js"></script><script>APP.renderAnnouncement();</script>
+</body>
+</html>

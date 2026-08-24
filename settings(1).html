@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>settings — musical</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Bebas+Neue&family=Creepster&family=Poppins:wght@400;500;600;700&family=Fira+Code:wght@400;500&family=Outfit:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=Syne:wght@400;500;600;700&family=Space+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root { --bg: #0a0e1a; --bg-raised: #0f1424; --border: #1a2342; --text: #c8d4e8; --text-bright: #e8eef8; --text-muted: #5a6a8a; --accent: #4a7fc9; --accent-hover: #5a90e0; --radius: 4px; --font: 'Inter',-apple-system,sans-serif; --font-mono: 'JetBrains Mono',monospace; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; font-size: 15px; -webkit-font-smoothing: antialiased; }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: 20px 32px; border-bottom: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
+    .nav-logo { font-family: var(--font-mono); font-size: 16px; font-weight: 500; color: var(--text-bright); text-decoration: none; }
+    .nav-links { display: flex; align-items: center; gap: 24px; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 14px; transition: color .15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); }
+    .nav-user { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--bg-raised); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 12px; color: var(--accent); overflow: hidden; }
+    .nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+    .container { max-width: 900px; margin: 0 auto; padding: 48px 32px 80px; }
+    h1 { font-size: 32px; font-weight: 700; color: var(--text-bright); margin-bottom: 8px; }
+    h2 { font-family: var(--font-mono); font-size: 14px; font-weight: 500; color: var(--text-muted); text-transform: lowercase; margin-bottom: 20px; letter-spacing: 0.02em; }
+    h3 { font-size: 15px; font-weight: 600; color: var(--text-bright); margin-bottom: 2px; }
+    p { margin-bottom: 12px; max-width: 640px; }
+    .muted { color: var(--text-muted); }
+    .page-header { padding: 32px 0 24px; }
+    .section { padding: 32px 0; border-top: 1px solid var(--border); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 20px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; transition: all .15s; border: 1px solid transparent; text-decoration: none; font-family: var(--font); background: transparent; }
+    .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-hover); text-decoration: none; }
+    .btn-secondary { background: transparent; color: var(--text); border-color: var(--border); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+    .btn-ghost { color: var(--text-muted); border-color: transparent; }
+    .btn-ghost:hover { color: var(--text); }
+    .btn-sm { padding: 6px 14px; font-size: 13px; }
+    .btn-danger { background: rgba(239,68,68,0.1); color: #ef4444; border-color: rgba(239,68,68,0.2); }
+    .btn-danger:hover { background: rgba(239,68,68,0.2); }
+    .connection-row { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border); }
+    .connection-row:last-child { border-bottom: none; }
+    .connection-row p { margin: 0; font-size: 13px; }
+    .form-group { margin-bottom: 20px; max-width: 400px; }
+    label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+    input[type="text"], select, textarea { width: 100%; padding: 10px 12px; background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-family: var(--font); font-size: 14px; outline: none; }
+    input[type="text"]:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    textarea { min-height: 100px; resize: vertical; }
+    .theme-picker { display: flex; gap: 10px; flex-wrap: wrap; }
+    .theme-btn { width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all .15s; }
+    .theme-btn:hover { transform: scale(1.1); }
+    .theme-btn.active { border-color: var(--text-bright); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text-bright); }
+    .accent-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .accent-btn { width: 28px; height: 28px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; transition: all .15s; }
+    .accent-btn:hover { transform: scale(1.1); }
+    .accent-btn.active { border-color: var(--text-bright); box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--text-bright); }
+    .font-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .font-btn { padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-raised); color: var(--text-muted); font-size: 13px; cursor: pointer; transition: all .15s; }
+    .font-btn:hover { border-color: var(--accent); color: var(--text); }
+    .font-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(74,127,201,0.1); }
+    .cursor-picker { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .cursor-btn { padding: 8px 16px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--bg-raised); color: var(--text-muted); font-size: 13px; cursor: pointer; transition: all .15s; }
+    .cursor-btn:hover { border-color: var(--accent); color: var(--text); }
+    .cursor-btn.active { border-color: var(--accent); color: var(--accent); background: rgba(74,127,201,0.1); }
+    .link-row { display: grid; grid-template-columns: 1fr 2fr auto; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .link-row select { padding: 8px; }
+    .link-row input { padding: 8px 10px; }
+    .badge-editor { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .badge-checkbox { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 13px; }
+    .badge-checkbox input { width: auto; }
+    .badge-checkbox span { padding: 4px 10px; border-radius: var(--radius); border: 1px solid; font-weight: 600; font-size: 11px; text-transform: uppercase; }
+    .danger-zone { border: 1px solid rgba(239,68,68,0.2); border-radius: var(--radius); padding: 24px; background: rgba(239,68,68,0.05); margin-top: 24px; }
+    .danger-zone h3 { color: #ef4444; margin-bottom: 12px; }
+    .footer { max-width: 900px; margin: 0 auto; padding: 32px; border-top: 1px solid var(--border); text-align: center; }
+    .footer p { font-size: 13px; color: var(--text-muted); margin: 0 auto; }
+    .toast-container { position: fixed; bottom: 24px; right: 24px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; }
+    .toast { background: var(--bg-raised); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 18px; font-size: 13px; animation: slideIn .2s ease; }
+    @keyframes slideIn { from { transform: translateX(20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @media (max-width: 768px) { .nav { padding: 16px 20px; } .container { padding: 32px 20px 60px; } .link-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="navbar"></nav>
+  <main class="container">
+    <div class="page-header"><h1>settings</h1><p class="muted">connections, profile, appearance, data. keep it simple.</p></div>
+
+    <section class="section">
+      <h2>## profile</h2>
+      <div class="form-group"><label>display name</label><input type="text" id="settings-name"></div>
+      <div class="form-group"><label>bio</label><textarea id="settings-bio" placeholder="tell people who you are..."></textarea></div>
+      <div class="form-group"><label>pronouns</label><input type="text" id="settings-pronouns" placeholder="they/them"></div>
+      <div class="form-group"><label>location</label><input type="text" id="settings-location" placeholder="city, country"></div>
+      <div class="form-group"><label>occupation</label><input type="text" id="settings-occupation" placeholder="what you do"></div>
+      <div class="form-group"><label>avatar url</label><input type="text" id="settings-avatar" placeholder="https://example.com/avatar.jpg"></div><div class="form-group"><label>or upload avatar</label><input type="file" id="upload-avatar" accept="image/*" onchange="APP.handleFileUpload(this, 'avatar')" style="padding:8px 0;background:transparent;border:none;"></div>
+      <div class="form-group"><label>banner url</label><input type="text" id="settings-banner" placeholder="https://example.com/banner.jpg"></div><div class="form-group"><label>or upload banner</label><input type="file" id="upload-banner" accept="image/*" onchange="APP.handleFileUpload(this, 'banner')" style="padding:8px 0;background:transparent;border:none;"></div>
+      <div class="form-group"><label>background video url</label><input type="text" id="settings-backgroundVideo" placeholder="https://example.com/video.mp4"></div>
+      <div class="form-group"><label>profile music url</label><input type="text" id="settings-musicURL" placeholder="https://example.com/music.mp3"></div>
+      <div class="form-group"><label>custom url slug</label><input type="text" id="settings-urlSlug" placeholder="yourname"></div>
+      <div class="form-group"><label>status</label>
+        <select id="settings-status">
+          <option value="online">online</option>
+          <option value="idle">idle</option>
+          <option value="dnd">do not disturb</option>
+          <option value="offline">offline</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="APP.saveSettings()">save profile</button>
+    </section>
+    <section class="section">
+      <h2>## welcome screen</h2>
+      <p class="muted" style="margin-bottom: 16px;">customize the screen shown when you log in</p>
+      <div class="form-group"><label>welcome title</label><input type="text" id="settings-welcomeTitle" placeholder="welcome back!"></div>
+      <div class="form-group"><label>welcome message</label><textarea id="settings-welcomeMsg" placeholder="your custom message..."></textarea></div>
+      <div class="form-group"><label>welcome emoji</label><input type="text" id="settings-welcomeEmoji" placeholder="👋" style="width:80px;"></div>
+      <div class="form-group"><label>welcome accent color</label><input type="text" id="settings-welcomeColor" placeholder="#4a7fc9"></div>
+      <button class="btn btn-primary btn-sm" onclick="APP.saveSettings()">save welcome screen</button>
+    </section>
+
+
+    <section class="section">
+      <h2>## profile welcome screen</h2>
+      <p class="muted" style="margin-bottom: 16px;">a screen visitors see before entering your profile</p>
+      <div class="form-group"><label><input type="checkbox" id="settings-pw-enabled" style="width:auto;margin-right:8px;"> enable welcome screen</label></div>
+      <div class="form-group"><label>title</label><input type="text" id="settings-pw-title" placeholder="welcome to my profile"></div>
+      <div class="form-group"><label>message</label><textarea id="settings-pw-message" placeholder="click to enter..."></textarea></div>
+      <div class="form-group"><label>background type</label>
+        <select id="settings-pw-bgType">
+          <option value="solid">solid color</option>
+          <option value="gradient">gradient</option>
+          <option value="image">image</option>
+          <option value="blur">blur overlay</option>
+        </select>
+      </div>
+      <div class="form-group"><label>background color</label><input type="text" id="settings-pw-bgColor" placeholder="#000000"></div>
+      <div class="form-group"><label>background color 2 (gradient)</label><input type="text" id="settings-pw-bgColor2" placeholder="#1a1a2e"></div>
+      <div class="form-group"><label>background image url</label><input type="text" id="settings-pw-bgImage" placeholder="https://..."></div>
+      <div class="form-group"><label>blur amount (px)</label><input type="number" id="settings-pw-blur" placeholder="0" style="width:100px;"></div>
+      <div class="form-group"><label>text color</label><input type="text" id="settings-pw-textColor" placeholder="#ffffff"></div>
+      <div class="form-group"><label>font size</label><input type="text" id="settings-pw-fontSize" placeholder="32px" style="width:100px;"></div>
+      <div class="form-group"><label>text align</label>
+        <select id="settings-pw-textAlign">
+          <option value="left">left</option>
+          <option value="center">center</option>
+          <option value="right">right</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="APP.saveProfileWelcome()">save welcome screen</button>
+    </section>
+    <section class="section">
+      <h2>## appearance</h2>
+      <p class="muted" style="margin-bottom: 16px;">pick a color. or don't. blue is fine.</p>
+      <label>theme</label>
+      <div class="theme-picker" id="theme-picker"></div>
+      <div style="margin-top: 20px;">
+        <label>accent color</label>
+        <div class="accent-picker" id="accent-picker"></div>
+      </div>
+      <div style="margin-top: 24px;">
+        <label>font family</label>
+        <div class="font-picker" id="font-picker"></div>
+      </div>
+      <div style="margin-top: 24px;">
+        <label>cursor style</label>
+        <div class="cursor-picker" id="cursor-picker"></div>
+      </div>
+      <div style="margin-top: 24px;">
+        <label>particle effect</label>
+        <div class="cursor-picker" id="particle-picker"></div>
+      </div>
+      <div style="margin-top: 24px;">
+        <label>profile layout</label>
+        <div class="cursor-picker" id="layout-picker"></div>
+      </div>
+      
+      <div style="margin-top: 24px;">
+        <label>username effect</label>
+        <div class="cursor-picker" id="username-effect-picker"></div>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <label>profile overlay effect</label>
+        <div class="cursor-picker" id="profile-effect-picker"></div>
+      </div>
+      <div style="margin-top: 24px;">
+        <label>profile card border</label>
+        <div class="cursor-picker" id="border-picker"></div>
+      </div>
+      <div style="margin-top: 24px;">
+        <label>divider style</label>
+        <div class="cursor-picker" id="divider-picker"></div>
+      </div>
+      <div style="margin-top: 24px;">
+        <label><input type="checkbox" id="settings-glow" style="width:auto;margin-right:8px;"> glow effect</label>
+      </div>
+      <div style="margin-top: 12px;">
+        <label><input type="checkbox" id="settings-typing" style="width:auto;margin-right:8px;"> typing effect on bio</label>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>## custom css</h2>
+      <p class="muted" style="margin-bottom: 16px;">inject your own styles. be careful.</p>
+      <div class="form-group"><textarea id="settings-customCSS" placeholder="body { background: red; }" style="min-height:120px;font-family:var(--font-mono);font-size:12px;"></textarea></div>
+      <button class="btn btn-primary btn-sm" onclick="APP.saveSettings()">save css</button>
+    </section>
+
+    <section class="section">
+      <h2>## connections</h2>
+      <p class="muted" style="margin-bottom: 20px;">we only read data. never post.</p>
+      <div class="connection-row"><div><h3>spotify</h3><p class="muted">read your top artists and recent tracks</p></div><button class="btn btn-secondary btn-sm" id="connect-spotify">connect</button></div>
+      <div class="connection-row"><div><h3>last.fm</h3><p class="muted">scrobbles, charts, taste data</p></div><button class="btn btn-secondary btn-sm" id="connect-lastfm">connect</button></div>
+      <div class="connection-row"><div><h3>discord</h3><p class="muted">show what you're playing in your status</p></div><button class="btn btn-secondary btn-sm" id="connect-discord">connect</button></div><div class="form-group" style="margin-top:12px;"><label>discord display status</label><select id="settings-discordStatus" onchange="APP.updateMe({discordStatus:this.value})"><option value="online">online</option><option value="idle">idle</option><option value="dnd">dnd</option><option value="offline">offline</option></select></div>
+    </section>
+
+    <section class="section">
+      <h2>## social links</h2>
+      <p class="muted" style="margin-bottom: 16px;">add links to your other profiles</p>
+      <div id="links-editor"></div>
+      <button class="btn btn-secondary btn-sm" style="margin-top: 8px;" onclick="APP.addLink()">+ add link</button>
+    </section>
+
+
+    <section class="section">
+      <h2>## bio links</h2>
+      <p class="muted" style="margin-bottom: 16px;">linktree-style buttons for your profile</p>
+      <div id="biolinks-editor"></div>
+      <button class="btn btn-secondary btn-sm" style="margin-top: 8px;" onclick="APP.addBioLink()">+ add bio link</button>
+    </section>
+    <section class="section" id="badges-section" style="display:none;">
+      <h2>## your badges</h2>
+      <p class="muted" style="margin-bottom: 16px;">admin only — manage your badges</p>
+      <div class="badge-editor" id="badge-editor"></div>
+    </section>
+
+    <section class="section">
+      <h2>## data</h2>
+      <p class="muted" style="margin-bottom: 16px;">your data lives in your browser. back it up or move it.</p>
+      <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+        <button class="btn btn-secondary btn-sm" onclick="APP.exportData()"><i class="fas fa-download"></i> export data</button>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()"><i class="fas fa-upload"></i> import data</button>
+        <input type="file" id="import-file" style="display:none" accept=".json" onchange="APP.importData(this.files[0])">
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>## account</h2>
+      <button class="btn btn-secondary" onclick="APP.logout()">log out</button>
+      <p class="muted" style="margin-top: 12px; font-size: 13px;">your data lives in your browser. clearing cookies kills everything.</p>
+    </section>
+  </main>
+  <footer class="footer"><p>musical — 2026</p></footer>
+  <script src="app.js"></script>
+  <script>
+    APP.requireAuth(); APP.renderNav(); APP.renderSettings(); APP.renderBioLinksEditor(); APP.renderUsernameEffects(); APP.renderProfileEffectPicker(); APP.renderBorderPicker(); APP.renderProfileWelcomeSettings();
+    const me = APP.getMe();
+    if (me && me.isAdmin) {
+      document.getElementById('badges-section').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
