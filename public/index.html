@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>musical</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+  <canvas id="bg-3d-canvas"></canvas>
+
+  <div id="click-to-enter-overlay" class="overlay">
+    <div class="enter-content">
+      <h1 class="glow-text">[ click to enter ]</h1>
+      <p>musical platform</p>
+    </div>
+  </div>
+
+  <div id="app">
+    <nav class="navbar">
+      <div class="logo" onclick="lookupUser('vey')">MUSICAL</div>
+      <div class="search-bar">
+        <input type="text" id="search-username" placeholder="search user..." onkeydown="handleSearchKey(event)">
+        <button onclick="performSearch()">search</button>
+      </div>
+      <div class="nav-links">
+        <button onclick="showSection('profile-view')">profile</button>
+        <button id="editor-nav-btn" onclick="showSection('profile-builder')" class="hidden">edit profile</button>
+        <button onclick="showSection('forum'); loadForumPosts();">forum</button>
+        <button onclick="showSection('global-chat')">chat</button>
+        <button id="admin-nav-btn" class="hidden admin-tag" onclick="showSection('admin')">admin panel</button>
+        <button id="auth-modal-btn" onclick="openAuthModal()">login / register</button>
+      </div>
+    </nav>
+
+    <!-- Profile View -->
+    <section id="profile-view" class="section">
+      <div class="bio-card-wrapper">
+        <div class="bio-card" id="bio-card">
+          <div class="avatar-container">
+            <img id="view-avatar" src="https://i.imgur.com/6VBx3io.png" alt="Avatar" class="avatar">
+          </div>
+          <h1 id="view-username" class="user-title">vey</h1>
+          <div id="view-badges" class="badges"></div>
+          <p id="view-bio" class="bio-description">loading...</p>
+          
+          <div id="view-tracks" class="tracks-list"></div>
+          <div id="view-socials" class="socials-grid"></div>
+
+          <div class="card-footer">
+            <span class="view-count">views: <span id="view-count">0</span></span>
+            <button id="audio-toggle-btn" class="audio-btn" onclick="toggleAudio()">play music</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Edit Profile -->
+    <section id="profile-builder" class="section hidden">
+      <div class="form-container">
+        <h2>edit profile</h2>
+        <div class="form-group">
+          <label>avatar url</label>
+          <input type="text" id="edit-avatar" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>bio</label>
+          <textarea id="edit-bio" rows="3" placeholder="say something..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>track url (mp3 link)</label>
+          <input type="text" id="edit-audio" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>theme color</label>
+          <input type="color" id="edit-color" value="#ff0055">
+        </div>
+        <div class="form-group">
+          <label>socials</label>
+          <input type="text" id="edit-social-discord" placeholder="discord">
+          <input type="text" id="edit-social-telegram" placeholder="telegram">
+          <input type="text" id="edit-social-soundcloud" placeholder="soundcloud">
+        </div>
+        <button class="primary-btn" onclick="saveProfile()">save changes</button>
+      </div>
+    </section>
+
+    <!-- Forum -->
+    <section id="forum" class="section hidden">
+      <div class="forum-header">
+        <h2>forum</h2>
+        <button class="primary-btn" onclick="toggleThreadModal(true)">+ post thread</button>
+      </div>
+      <div id="forum-posts" class="forum-container"></div>
+    </section>
+
+    <!-- Global Chat -->
+    <section id="global-chat" class="section hidden">
+      <div class="chat-container">
+        <h2>chat</h2>
+        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-input-row">
+          <input type="text" id="chat-input" placeholder="type a message..." onkeydown="handleChatKey(event)">
+          <button class="primary-btn" onclick="sendChatMessage()">send</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Admin -->
+    <section id="admin" class="section hidden">
+      <div class="form-container border-admin">
+        <h2>admin badge manager</h2>
+        <div class="form-group">
+          <label>target username</label>
+          <input type="text" id="admin-target" placeholder="username">
+        </div>
+        <div class="form-group">
+          <label>badge</label>
+          <select id="admin-badge">
+            <option value="OG">OG</option>
+            <option value="DEV">DEV</option>
+            <option value="ADMIN">ADMIN</option>
+            <option value="VERIFIED">VERIFIED</option>
+            <option value="VIP">VIP</option>
+          </select>
+        </div>
+        <div class="button-group">
+          <button class="primary-btn" onclick="manageBadge('add')">give badge</button>
+          <button class="secondary-btn" onclick="manageBadge('remove')">remove badge</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Auth Modal -->
+  <div id="auth-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeAuthModal()">&times;</span>
+      <h2>account</h2>
+      <div class="form-group">
+        <label>username</label>
+        <input type="text" id="auth-username" placeholder="username">
+      </div>
+      <div class="form-group">
+        <label>password</label>
+        <input type="password" id="auth-password" placeholder="password">
+      </div>
+      <div class="button-group">
+        <button class="primary-btn" onclick="handleAuth('login')">login</button>
+        <button class="secondary-btn" onclick="handleAuth('register')">register</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thread Modal -->
+  <div id="thread-modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="toggleThreadModal(false)">&times;</span>
+      <h2>new thread</h2>
+      <div class="form-group">
+        <label>title</label>
+        <input type="text" id="thread-title" placeholder="title">
+      </div>
+      <div class="form-group">
+        <label>category</label>
+        <select id="thread-category">
+          <option value="General">General</option>
+          <option value="Music">Music</option>
+          <option value="Marketplace">Marketplace</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>content</label>
+        <textarea id="thread-content" rows="4" placeholder="post content..."></textarea>
+      </div>
+      <button class="primary-btn" onclick="submitThread()">post</button>
+    </div>
+  </div>
+
+  <audio id="global-audio" loop></audio>
+  <script src="app.js"></script>
+</body>
+</html>
